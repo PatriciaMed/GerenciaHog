@@ -1,52 +1,14 @@
 import os
 
+
 def ehConceto(entrada):
   palavrasChave = [
-    "peca", "pecas", "peça", "peças", "pçs", "pç", "concerto", "conserto"
+    "peca", "pecas", "peça", "peças", "pçs", "pç", "concerto", "conserto", "!"
   ]
   for palavra in palavrasChave:
     if palavra in entrada.lower():
       return True
   return False
-def resumoPrivado():
-  endereco = input("Nome do extrato em txt: ")
-  extrato = open(endereco, 'r')
-  for registro in extrato:
-    listaRegistro = registro.replace('"', '').split(",")
-    nome = "" + listaRegistro[6]
-    if "incoming" in registro:
-      sinal = "+"
-    else:
-      sinal = "-"
-    fichaResumoPrvt = open("ResumoPrivado.txt", 'r')
-    conteudo = fichaResumoPrvt.readlines()
-    conteudo.append(sinal + listaRegistro[4] + "|" +listaRegistro[5] + "              " +nome + "\n")
-    fichaResumoPrvt = open("ResumoPrivado.txt", 'w')
-    fichaResumoPrvt.writelines(conteudo)
-    fichaResumoPrvt.close()
-
-def resumoPublico():
-  endereco = input("Nome do extrato em txt: ")
-  extrato = open(endereco, 'r')
-  for registro in extrato:
-    listaRegistro = registro.replace('"', '').replace("Business Services Payment:",'').split(",")
-    nome = "" + listaRegistro[6]
-    if "incoming" in registro:
-      fichaResumoPbc = open("ResumoPublico.txt", 'r')
-      conteudo = fichaResumoPbc.readlines()
-      conteudo.append("+" + listaRegistro[4] + "|" +listaRegistro[5] + "              " +nome + "\n")
-      fichaResumoPbc= open("ResumoPublico.txt", 'w')
-      fichaResumoPbc.writelines(conteudo)
-      fichaResumoPbc.close()
-
-  def ehConceto(entrada):
-    palavrasChave = [
-      "peca", "pecas", "peça", "peças", "pçs", "pç", "concerto", "conserto"
-    ]
-    for palavra in palavrasChave:
-      if palavra in entrada.lower():
-        return True
-    return False
 
 
 def idFuncionario(id):
@@ -61,8 +23,70 @@ def idFuncionario(id):
   }
   return switcher.get(id, "nothing")
 
-def atualiza():
-  endereco = input("Nome do extrato em txt: ")
+
+def espaco(comprimento):
+  nEspacos = (30 - comprimento)
+  sEspc = " "
+  for i in range(nEspacos):
+    sEspc = sEspc + " "
+  return sEspc
+
+
+def resumoPrivado(endereco):
+  extrato = open(endereco, 'r')
+  for registro in extrato:
+    listaRegistro = registro.replace('"',
+                                     '').replace("Business Services Payment:",
+                                                 '').split(",")
+    nome = "" + listaRegistro[6]
+    if "incoming" in registro:
+      sinal = "+"
+    else:
+      sinal = "-"
+    lim = 5 - len(listaRegistro[4])
+    for i in range(lim):
+      sinal = sinal + " "
+
+    fichaResumoPrvt = open("ResumoPrivado.txt", 'r')
+    conteudo = fichaResumoPrvt.readlines()
+    conteudo.append(sinal + listaRegistro[4] + "|" + listaRegistro[5] +
+                    espaco(len(listaRegistro[5])) + nome + "\n")
+    fichaResumoPrvt = open("ResumoPrivado.txt", 'w')
+    fichaResumoPrvt.writelines(conteudo)
+    fichaResumoPrvt.close()
+
+
+def resumoPublico(endereco):
+  extrato = open(endereco, 'r')
+  for registro in extrato:
+    listaRegistro = registro.replace('"',
+                                     '').replace("Business Services Payment:",
+                                                 '').split(",")
+    nome = "" + listaRegistro[6]
+    if "incoming" in registro:
+      sinal = "+"
+      lim = 5 - len(listaRegistro[4])
+      for i in range(lim):
+        sinal = sinal + " "
+      fichaResumoPbc = open("ResumoPublico.txt", 'r')
+      conteudo = fichaResumoPbc.readlines()
+      conteudo.append(sinal + listaRegistro[4] + "|" + listaRegistro[5] +
+                      espaco(len(listaRegistro[5])) + nome + "\n")
+      fichaResumoPbc = open("ResumoPublico.txt", 'w')
+      fichaResumoPbc.writelines(conteudo)
+      fichaResumoPbc.close()
+
+  def ehConceto(entrada):
+    palavrasChave = [
+      "peca", "pecas", "peça", "peças", "pçs", "pç", "concerto", "conserto"
+    ]
+    for palavra in palavrasChave:
+      if palavra in entrada.lower():
+        return True
+    return False
+
+
+def atualiza(endereco):
   extrato = open(endereco, 'r')
   for registro in extrato:
     if "incoming" in registro:
@@ -124,14 +148,17 @@ def pagamento():
 
 
 escolha = 1
+endereco = input("Nome do extrato em txt: ")
 while escolha != '0':
-  print("1-Atualizar registro\n2-Gerar folha de pagamento\n 0- sair")
+  print(
+    "1-Atualizar registro\n2-Gerar folha de pagamento\n3-Resumo Privado\n4-Resumo Publico\n 0- sair"
+  )
   escolha = input()
   if escolha == '1':
-    atualiza()
+    atualiza(endereco)
   if escolha == '2':
     pagamento()
   if escolha == '3':
-    resumoPrivado()
+    resumoPrivado(endereco)
   if escolha == '4':
-    resumoPublico()
+    resumoPublico(endereco)
