@@ -14,34 +14,30 @@ def resumoPrivado():
   for registro in extrato:
     listaRegistro = registro.replace('"', '').split(",")
     nome = "" + listaRegistro[6]
-    if '@' in registro:
-      print(registro)
-      id = int(input("Id do funcionário a ser transferido:"))
-      nome = idFuncionario(id)
-      if "incoming" in registro:
-        sinal = "+"
-      else:
-        sinal = "-"
-      fichaResumoPrvt = open("ResumoPrivado.txt", 'w')
-      fichaResumoPrvt.writelines(sinal + listaRegistro[4] + "|" +listaRegistro[5] + "              " +nome + "\n")
-      fichaResumoPrvt.close()
+    if "incoming" in registro:
+      sinal = "+"
+    else:
+      sinal = "-"
+    fichaResumoPrvt = open("ResumoPrivado.txt", 'r')
+    conteudo = fichaResumoPrvt.readlines()
+    conteudo.append(sinal + listaRegistro[4] + "|" +listaRegistro[5] + "              " +nome + "\n")
+    fichaResumoPrvt = open("ResumoPrivado.txt", 'w')
+    fichaResumoPrvt.writelines(conteudo)
+    fichaResumoPrvt.close()
 
 def resumoPublico():
   endereco = input("Nome do extrato em txt: ")
   extrato = open(endereco, 'r')
   for registro in extrato:
-    listaRegistro = registro.replace('"', '').split(",")
+    listaRegistro = registro.replace('"', '').replace("Business Services Payment:",'').split(",")
     nome = "" + listaRegistro[6]
-    if '@' in registro:
-      print(registro)
-      id = int(input("Id do funcionário a ser transferido:"))
-      nome = idFuncionario(id)
-    nomeArquivo = "Funcionarios/" + nome + ".txt"
-    for registro in extrato:
-      if "incoming" in registro:
-        fichaResumoPblc = open("ResumoPublico.txt", 'w')
-        fichaResumoPblc.writelines(sinal + listaRegistro[4] + "|" +listaRegistro[5] + "              " +nome + "\n")
-        fichaResumoPblc.close()
+    if "incoming" in registro:
+      fichaResumoPbc = open("ResumoPublico.txt", 'r')
+      conteudo = fichaResumoPbc.readlines()
+      conteudo.append("+" + listaRegistro[4] + "|" +listaRegistro[5] + "              " +nome + "\n")
+      fichaResumoPbc= open("ResumoPublico.txt", 'w')
+      fichaResumoPbc.writelines(conteudo)
+      fichaResumoPbc.close()
 
   def ehConceto(entrada):
     palavrasChave = [
