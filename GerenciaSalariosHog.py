@@ -76,14 +76,13 @@ def resumoPublico(endereco):
       fichaResumoPbc.writelines(conteudo)
       fichaResumoPbc.close()
 
-  def ehConceto(entrada):
-    palavrasChave = [
-      "peca", "pecas", "peça", "peças", "pçs", "pç", "concerto", "conserto"
+def ehConceto(entrada):
+  palavrasChave = ["peca", "pecas", "peça", "peças", "pçs", "pç", "concerto", "conserto"
     ]
-    for palavra in palavrasChave:
-      if palavra in entrada.lower():
-        return True
-    return False
+  for palavra in palavrasChave:
+    if palavra in entrada.lower():
+      return True
+  return False
 
 
 def atualiza(endereco):
@@ -128,7 +127,6 @@ def pagamento():
   for raiz, pastas, arquivos in os.walk(diretorio, topdown=True):
     for name in arquivos:
       conteudo = []
-      outros = []
       pagamento = 0
       caminho = diretorio + name
       fichaFuncionario = open(caminho, "r")
@@ -136,6 +134,8 @@ def pagamento():
       for entrada in logFuncionario:
         if ehConceto(entrada) == True:
           pagamento = pagamento + 400
+          if "cera" in entrada.lower():
+            pagamento= pagamento+100
         else:
           print("\n" + entrada)
           pagamento = pagamento + int(input("Valor a adicionar no salário:"))
@@ -151,7 +151,7 @@ escolha = 1
 endereco = input("Nome do extrato em txt: ")
 while escolha != '0':
   print(
-    "1-Atualizar registro\n2-Gerar folha de pagamento\n3-Resumo Privado\n4-Resumo Publico\n 0- sair"
+    "\n1-Atualizar registro\n2-Gerar folha de pagamento\n3-Resumo Privado\n4-Resumo Publico\n 0- sair"
   )
   escolha = input()
   if escolha == '1':
